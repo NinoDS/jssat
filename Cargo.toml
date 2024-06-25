@@ -12,7 +12,8 @@ members = [
 ]
 
 [profile.release]
-lto = true
+opt-level = 3
+codegen-units = 128
 
 # Our code generation crates, `ir_file` and `grammar_notation_helper`, take an
 # awful long time to generate code (~11s and ~4s respectively). We have found
@@ -21,7 +22,7 @@ lto = true
 
 [profile.dev.build-override]
 opt-level = 3
-codegen-units = 16
+codegen-units = 64
 
 [profile.release.build-override]
 opt-level = 3

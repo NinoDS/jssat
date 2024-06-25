@@ -1,7 +1,5 @@
-#![feature(command_access)]
 #![feature(box_patterns)]
 #![feature(bool_to_option)]
-#![feature(const_panic)]
 #![feature(const_option)]
 #![feature(const_fn_trait_bound)]
 #![feature(box_syntax)]
@@ -13,7 +11,6 @@
 #![feature(slice_pattern)]
 #![feature(associated_type_bounds)]
 #![feature(nonzero_ops)]
-#![feature(format_args_capture)]
 #![feature(try_blocks)]
 // this is to silence `.map_context()` for the time being
 // #![allow(deprecated)]
@@ -109,6 +106,8 @@ fn link_binary(build: &[u8]) {
     let artifact = "jssatout.exe";
     #[cfg(target_os = "linux")]
     let artifact = "jssatout";
+    #[cfg(target_os = "macos")]
+    let artifact = "jssatout";
 
     let mut build = cc::Build::new();
 
@@ -152,7 +151,7 @@ fn link_binary(build: &[u8]) {
     eprintln!("invoking: {}", preview(&command));
     assert!(command.spawn().unwrap().wait().unwrap().success());
 
-    #[cfg(not(any(target_os = "linux", target_os = "windows")))]
+    #[cfg(not(any(target_os = "linux", target_os = "windows", target_os = "macos")))]
     std::compile_error!("unimplemented platform");
 }
 
@@ -196,7 +195,7 @@ f(print);
     let program = time(move || lifted::lift(ir));
 
     println!("executing program");
-    // interpret(&program, dealer, source_map);
+    interpret(&program, dealer, source_map);
     let (result, collector) = time(|| {
         let mut engine = abst_interp::AbsIntEngine::new_with_collector(
             &program,

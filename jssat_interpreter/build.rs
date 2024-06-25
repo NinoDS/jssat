@@ -38,7 +38,7 @@ fn compile_irfiles() {
 
         if let Some((dest_path, kind, name)) = dest {
             let mut output = BufWriter::new(
-                std::fs::File::with_options()
+                std::fs::File::options()
                     .write(true)
                     .create(true)
                     .truncate(true)
@@ -77,6 +77,8 @@ fn link_jssatrt() {
     #[cfg(target_os = "windows")]
     let lib_name = "jssatrt.lib";
     #[cfg(target_os = "linux")]
+    let lib_name = "libjssatrt.a";
+    #[cfg(target_os = "macos")]
     let lib_name = "libjssatrt.a";
 
     let artifact = build_artifact_dir.join(lib_name);
